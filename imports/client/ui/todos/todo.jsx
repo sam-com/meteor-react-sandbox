@@ -1,7 +1,6 @@
 // @flow
 import React, { Suspense, type Element, useRef } from "react";
 import { Meteor } from "meteor/meteor";
-import { useNavigate } from "react-router-dom";
 
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -18,13 +17,21 @@ import styled from "@emotion/styled";
 import { useCallMutation } from "/imports/client/hooks/callHooks";
 import { MutationSuspense } from "/imports/client/suspense/MutationSuspense";
 import { useHover } from "/imports/client/hooks/useHover";
+
 import type { Todo } from "/imports/api/Todos/TodosTypes";
+import type { CallMutation } from "/imports/client/types/callMutation";
 
 type TodoProps = {|
   item: Todo,
 |};
 
-function TodoCheckbox({ item, mutation }: { item: Todo, mutation: any }) {
+function TodoCheckbox({
+  item,
+  mutation,
+}: {
+  item: Todo,
+  mutation: CallMutation,
+}) {
   const isChecked = item.completed ?? false;
   const fallback = (
     <CircularProgress color="primary" size={24} sx={{ padding: "9px" }} />
@@ -37,11 +44,14 @@ function TodoCheckbox({ item, mutation }: { item: Todo, mutation: any }) {
   );
 }
 
-function TodoDelete({ listItemRef, item, mutation }) {
+function TodoDelete({ listItemRef, item, mutation, isAvailableForMutation }) {
   const isHover = useHover(listItemRef);
-  const display = isHover ? "flex" : "none";
+  const display = isHover && isAvailableForMutation ? "flex" : "none";
 
-  const handleDelete = () => mutation.mutate({ todoId: item._id });
+  const handleDelete = () => {
+    if (!isAvailableForMutation) return;
+    mutation.mutate({ todoId: item._id });
+  };
 
   return (
     <IconButton aria-label="comment" sx={{ display }} onClick={handleDelete}>
@@ -60,23 +70,27 @@ function TodoName({ item }: { item: Todo }) {
 
 export function TodoItem({ item }: TodoProps): Element<typeof ListItem> {
   const listItemRef = useRef();
-  const navigate = useNavigate();
   const completeMutation = useCallMutation("todos.toggleComplete");
   const deleteMutation = useCallMutation("todos.delete");
 
-  const listItemProps = { selected: deleteMutation.isLoading };
+  const isAvailableForMutation =
+    !deleteMutation.isLoading && !completeMutation.isLoading;
+
+  const listItemProps = {
+    selected: deleteMutation.isLoading,
+    disabled: deleteMutation.isLoading || completeMutation.isLoading,
+  };
 
   const StyledListItemButton = styled((props: any) => (
     <ListItemButton {...props} />
-  ))(({ theme }) => ({
+  ))(() => ({
     "&.Mui-selected": {
-      backgroundColor: "rgba(255, 99, 71, 0.75)",
+      backgroundColor: "tomato",
     },
   }));
 
   return (
     <ListItem
-      disabled={deleteMutation.isLoading || completeMutation.isLoading}
       ref={listItemRef}
       alignItems="center"
       disablePadding
@@ -85,6 +99,7 @@ export function TodoItem({ item }: TodoProps): Element<typeof ListItem> {
         <TodoDelete
           listItemRef={listItemRef}
           item={item}
+          isAvailableForMutation={isAvailableForMutation}
           mutation={deleteMutation}
         />
       }
