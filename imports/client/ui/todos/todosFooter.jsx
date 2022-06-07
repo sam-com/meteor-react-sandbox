@@ -22,4 +22,3 @@ export function TodosFooter(): React$Node {
     </ListItem>
   );
 }
-const useTodos = () => useTracker(() => TodosCollection.find().fetch());

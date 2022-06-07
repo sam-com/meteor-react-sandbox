@@ -1,5 +1,4 @@
 // @flow
-import React, { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 
 import { Meteor } from "meteor/meteor";
@@ -7,16 +6,15 @@ import { Tracker } from "meteor/tracker";
 import { useTracker } from "meteor/react-meteor-data";
 
 import type { SubscriptionHandle } from "/imports/client/types/subscriptionHandle";
-import type { SubscriptionsAsset } from "/imports/client/types/subscriptionsAsset";
 
 type Subcription = {| name: string, params: any |};
 
 function waitForSubscription(subscriptionHandle: SubscriptionHandle) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (!subscriptionHandle) return resolve(null);
 
     Tracker.nonreactive(() => {
-      Tracker.autorun((computation) => {
+      Tracker.autorun(() => {
         if (subscriptionHandle.ready()) return resolve(true);
       });
     });

@@ -1,10 +1,8 @@
 // @flow
-import React, { Suspense, useEffect, useState, Fragment } from "react";
+import React from "react";
 import { useTracker } from "meteor/react-meteor-data";
 
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
 
 import { TodosCollection } from "/imports/api/Todos/TodosCollection";
 import { TodoItem } from "./todo";

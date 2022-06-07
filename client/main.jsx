@@ -1,8 +1,8 @@
 // @flow
+import React from "react";
 import { Meteor } from "meteor/meteor";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 

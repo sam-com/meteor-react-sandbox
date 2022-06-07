@@ -1,8 +1,7 @@
 // @flow
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { Meteor } from "meteor/meteor";
 
-import { wait } from "/imports/debug/wait";
 import type { CallMutation } from "/imports/client/types/callMutation";
 
 function callPromise(method: string, ...args: any[]) {
@@ -24,9 +23,7 @@ export const useCallMutation = (method: string, helpers: any): CallMutation =>
   useMutation(callMutation(method), helpers);
 
 export const useCallQuery = (method: string, ...args: any[]): any => {
-  const queryClient = useQueryClient();
-
-  const { data, error } = useQuery([method, ...args], () =>
+  const { data } = useQuery([method, ...args], () =>
     callPromise(method, ...args)
   );
 

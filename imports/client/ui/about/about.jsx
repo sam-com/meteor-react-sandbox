@@ -16,7 +16,13 @@ const LoadingArticle = () => (
   <Skeleton animation="pulse" width="100%" height="100px" />
 );
 
-const ArticleError = ({ error, resetErrorBoundary }) => (
+const ArticleError = ({
+  error,
+  resetErrorBoundary,
+}: {
+  error: Error,
+  resetErrorBoundary: () => void,
+}) => (
   <Box>
     <Typography variant="body1" sx={{ color: "red" }}>
       {error.message} 💣

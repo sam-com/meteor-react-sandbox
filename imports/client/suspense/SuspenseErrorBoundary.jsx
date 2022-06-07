@@ -1,5 +1,4 @@
 // @flow
-import { Meteor } from "meteor/meteor";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryErrorResetBoundary } from "react-query";

@@ -18,7 +18,11 @@ type NewTodoProps = {|
   mutation: CallMutation,
 |};
 
-const EndAdornment = ({ onClick }) => (
+const EndAdornment = ({
+  onClick,
+}: {
+  onClick: (e: MouseEvent) => Promise<void>,
+}) => (
   <InputAdornment position="end">
     <IconButton onClick={onClick} edge="end">
       <CheckIcon color="success" />
